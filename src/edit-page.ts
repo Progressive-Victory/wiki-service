@@ -13,11 +13,14 @@ import nodeFetch, { Headers, Response } from 'node-fetch';
 import fetchCookie from 'fetch-cookie';
 import { JSDOM } from 'jsdom';
 
+import getLastInstagramPost from './socials/instagram';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fetch = fetchCookie(nodeFetch) as any; // TODO: For some reason doesn't like headers
 const domain = process.env.DOMAIN;
 const url = `https://${domain}/api.php`;
 const pageTitle = 'Main Page';
+const cssPageTitle = 'MediaWiki:Common.css';
 const headers = new Headers({
 	'Content-Type': 'application/x-www-form-urlencoded'
 });
@@ -119,6 +122,12 @@ async function updateSocials(pageHtml: string, newInnerHtml: string) {
 	throw new Error('Could not find element with id "socials"');
 }
 
+function updateCSS(css: string, newImageUrl: string) {
+	const regex = /(.ig-card\s*{[^}]*background-image:\s*url\(')([^']*)('\)[^}]*})/g;
+	const updatedCss = css.replace(regex, `$1${newImageUrl}$3`);
+	return updatedCss;
+}
+
 async function editPage(token: string, pageTitle: string, newContent: string) {
 	const params = new URLSearchParams({
 		action: 'edit',
@@ -142,20 +151,25 @@ async function editPage(token: string, pageTitle: string, newContent: string) {
 	const token = await getToken();
 	const oldPageHTML = await getPage(pageTitle);
 
-	// TODO: This is test data to avoid using the Youtube API
+	const igPost = await getLastInstagramPost();
+
 	const data = {
-		youtubeThumbnail: 'https://i.ytimg.com/vi/CJ3hfxxlF2Q/maxresdefault.jpg',
-		youtubeTitle: 'Progressive Victory All Hands Q2',
-		youtubeDescription:
-			'📢Join us for this Quarter\'s All Hands Meeting!📢\nCome hear about all things PV! \nStay up to date with recent changes and updates.  \nLearn all the rad new ways to get involved  \nhttps://www.mobilize.us/progressivevi...\nVideo/Music by: PV Video Team\nVoice Over by:\nJoin our efforts and come volunteer with Progressive Victory!\nhttps://progressivevictory.win/volunteer\n\nWebsite: https://progressivevictory.win/video',
-		youtubeLink: 'https://www.youtube.com/watch?v=zc1vYezduZQ',
-		youtubeChannelTitle: 'Progressive Victory',
-		youtubeVideoID: 'CJ3hfxxlF2Q'
+		youtubeVideoID: 'PGw9BuZzmr8', // TODO: Use YouTube API
+		instagramImage: igPost.image,
+		instagramVideo: igPost.video,
+		instagramLink: igPost.link,
+		instagramDescription: igPost.description,
+		instagramTitle: igPost.name,
+		instagramType: igPost.type
 	};
 
 	const newSnippet = await renderLocalHTML(data);
 	const newPageHtml = await updateSocials(oldPageHTML, newSnippet);
 	const editResponse = await editPage(token, pageTitle, newPageHtml);
+
+	const oldCss = await getPage(cssPageTitle);
+	const newCss = updateCSS(oldCss, igPost.image);
+	await editPage(token, cssPageTitle, newCss);
 
 	return editResponse;
 })()

@@ -25,7 +25,7 @@ interface YouTubeResponse {
 	}>;
 }
 
-export async function getLastVideo(channelID: string = process.env.YOUTUBE_CHANNEL!) {
+export default async function getLastVideo(channelID: string = process.env.YOUTUBE_CHANNEL!) {
 	const apiKey = process.env.YOUTUBE_TOKEN;
 	if (!apiKey) {
 		throw Error('No YouTube API token provided.');

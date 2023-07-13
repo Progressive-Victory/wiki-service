@@ -3,7 +3,7 @@
     "build": "swc ./src --out-dir dist && yarn copy-files",
     "lint": "eslint src/**/*.ts --fix",
     "prepare": "husky install",
-    "copy-files": "cp -r assets dist/assets",
+    "copy-files": "cp -r assets dist/assets && cp config.json dist/config.json",
     "edit-page": "yarn build && node dist/edit-page.js"
   },
   "devDependencies": {

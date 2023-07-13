@@ -1,19 +1,10 @@
 <h2>Social Media Feed</h2>
+
 <!--
-<div class="card">
-	<%= youtubeThumbnail %>
-	<div class="externalimage-holder" style="width: 50px;">
-		{{Image:sized-external-image|250px|<%= youtubeThumbnail %>}}
-	</div>
-	<div class="card-body">
-		<h5 class="card-title">
-			[<%= youtubeLink %> <%= youtubeChannelTitle %>]
-		</h5>
-		<p class="card-text">
-			<%= youtubeDescription %>
-		</p>
-	</div>
-</div>
+	Credit: https://stackoverflow.com/questions/9078157/is-there-a-way-automatically-to-resize-mediawiki-images-depending-on-screen-size
+	https://www.mediawiki.org/wiki/Manual:Interface/Stylesheets
+	MediaWiki:Common.css
+	img { max-width:100%; height: auto; width: auto\9; /* ie8 */ }
 -->
 
 <div class="carousel slide" data-ride="carousel">
@@ -22,10 +13,26 @@
 			<youtube><%= youtubeVideoID %></youtube>
 		</div>
 		<div class="carousel-item">
-			<img class="d-block w-100" src="..." alt="Second slide" />
+			<!-- https://github.com/StarCitizenWiki/mediawiki-extensions-EmbedVideo -->
+			{{#ev:twitch|progressivevictory}}
 		</div>
 		<div class="carousel-item">
-			<img class="d-block w-100" src="..." alt="Third slide" />
+			<div class="card">
+				<% if (instagramType === 'IMAGE') { %>
+				<div class="card-img-top ig-card">
+					<!-- This will be filled in from MediaWiki:Common.css -->
+				</div>
+				<% } else { %>
+				<div class="card-img-top">
+					<!-- https://www.mediawikiwidgets.org/Video -->
+					{{Video|url=<%= instagramVideo %>}}
+				</div>
+				<% } %>
+				<div class="card-body">
+					<h5 class="card-title">[<%= instagramLink %> <%= instagramTitle %>]</h5>
+					<p class="card-text"><%= instagramDescription %></p>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
