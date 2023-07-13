@@ -1,2 +1,31 @@
 <h2>Social Media Feed</h2>
-<p>Stuff</p>
+<!--
+<div class="card">
+	<%= youtubeThumbnail %>
+	<div class="externalimage-holder" style="width: 50px;">
+		{{Image:sized-external-image|250px|<%= youtubeThumbnail %>}}
+	</div>
+	<div class="card-body">
+		<h5 class="card-title">
+			[<%= youtubeLink %> <%= youtubeChannelTitle %>]
+		</h5>
+		<p class="card-text">
+			<%= youtubeDescription %>
+		</p>
+	</div>
+</div>
+-->
+
+<div class="carousel slide" data-ride="carousel">
+	<div class="carousel-inner">
+		<div class="carousel-item active">
+			<youtube><%= youtubeVideoID %></youtube>
+		</div>
+		<div class="carousel-item">
+			<img class="d-block w-100" src="..." alt="Second slide" />
+		</div>
+		<div class="carousel-item">
+			<img class="d-block w-100" src="..." alt="Third slide" />
+		</div>
+	</div>
+</div>

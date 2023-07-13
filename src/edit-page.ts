@@ -1,13 +1,17 @@
 // https://www.mediawiki.org/wiki/API:Tokens#JavaScript
-import 'source-map-support/register';
+// https://www.mediawiki.org/wiki/API:Edit#MediaWiki_JS
+// https://www.w3.org/wiki/api.php?action=help&modules=edit
 
+import 'source-map-support/register';
+import 'dotenv/config';
+
+import { inspect } from 'util';
 import { join } from 'path';
 import { readFile } from 'fs/promises';
 import { render } from 'ejs';
 import nodeFetch, { Headers, Response } from 'node-fetch';
 import fetchCookie from 'fetch-cookie';
 import { JSDOM } from 'jsdom';
-import 'dotenv/config';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fetch = fetchCookie(nodeFetch) as any; // TODO: For some reason doesn't like headers
@@ -137,13 +141,26 @@ async function editPage(token: string, pageTitle: string, newContent: string) {
 (async () => {
 	const token = await getToken();
 	const oldPageHTML = await getPage(pageTitle);
-	const newSnippet = await renderLocalHTML({});
+
+	// TODO: This is test data to avoid using the Youtube API
+	const data = {
+		youtubeThumbnail: 'https://i.ytimg.com/vi/CJ3hfxxlF2Q/maxresdefault.jpg',
+		youtubeTitle: 'Progressive Victory All Hands Q2',
+		youtubeDescription:
+			'📢Join us for this Quarter\'s All Hands Meeting!📢\nCome hear about all things PV! \nStay up to date with recent changes and updates.  \nLearn all the rad new ways to get involved  \nhttps://www.mobilize.us/progressivevi...\nVideo/Music by: PV Video Team\nVoice Over by:\nJoin our efforts and come volunteer with Progressive Victory!\nhttps://progressivevictory.win/volunteer\n\nWebsite: https://progressivevictory.win/video',
+		youtubeLink: 'https://www.youtube.com/watch?v=zc1vYezduZQ',
+		youtubeChannelTitle: 'Progressive Victory',
+		youtubeVideoID: 'CJ3hfxxlF2Q'
+	};
+
+	const newSnippet = await renderLocalHTML(data);
 	const newPageHtml = await updateSocials(oldPageHTML, newSnippet);
 	const editResponse = await editPage(token, pageTitle, newPageHtml);
+
 	return editResponse;
 })()
-	.then(console.log)
-	.catch(console.error);
+	.then((o) => console.log(inspect(o, false, null, true)))
+	.catch((e) => console.error(inspect(e, false, null, true)));
 
 process.on('unhandledRejection', (err) => {
 	console.error(err);

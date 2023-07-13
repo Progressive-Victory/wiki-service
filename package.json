@@ -19,6 +19,7 @@
   "dependencies": {
     "@swc/cli": "^0.1.57",
     "@swc/core": "^1.2.246",
+    "@types/node-fetch": "^2.6.4",
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "fetch-cookie": "^2.1.0",
