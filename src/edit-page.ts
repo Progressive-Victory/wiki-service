@@ -154,6 +154,7 @@ async function editPage(token: string, pageTitle: string, newContent: string) {
 	const igPost = await getLastInstagramPost();
 
 	const data = {
+		twitchChannel: process.env.TWITCH_CHANNEL,
 		youtubeVideoID: 'PGw9BuZzmr8', // TODO: Use YouTube API
 		instagramImage: igPost.image,
 		instagramVideo: igPost.video,
