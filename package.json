@@ -1,10 +1,13 @@
 {
   "scripts": {
-    "build": "tsc",
+    "build": "swc ./src --out-dir dist && yarn copy-files",
     "lint": "eslint src/**/*.ts --fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "copy-files": "cp -r assets dist/assets",
+    "edit-page": "yarn build && node dist/edit-page.js"
   },
   "devDependencies": {
+    "@types/node": "^20.4.1",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.44.0",
@@ -14,7 +17,15 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "husky": "^8.0.3"
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.2.246",
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "fetch-cookie": "^2.1.0",
+    "husky": "^8.0.3",
+    "jsdom": "^22.1.0",
+    "node-fetch": "2",
+    "source-map-support": "^0.5.21"
   },
   "husky": {
     "hooks": {
